@@ -2,6 +2,8 @@ package com.umbrella.blockchains.blockchain;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Block {
     private int id;
@@ -9,10 +11,10 @@ public class Block {
     private String prevHash;
     private String currHash;
 
-    public Block(int id, long timeStamp, String prevHash) {
-        this.id = id;
-        this.timeStamp = timeStamp;
-        this.prevHash = prevHash;
+    public Block(Block previousBlock) {
+        this.id = previousBlock == null ? 1 : previousBlock.getId() + 1;
+        this.timeStamp = new Date().getTime();
+        this.prevHash = previousBlock == null ? "0" : previousBlock.getCurrHash();
         this.currHash = BlockChainUtil.applySha256(prevHash + timeStamp + id);;
     }
 
