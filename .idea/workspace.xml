@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1629701-9f1e-4583-ab95-568f0af8182a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/block/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/block/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/BlockChainRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/BlockChainRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/blockchain/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/blockchain/Block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/blockchain/BlockChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/blockchain/BlockChain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/blockchain/BlockChainUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/umbrella/blockchains/blockchain/BlockChainUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +25,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -39,13 +43,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Application.BlockChainRun">
+    <configuration name="BlockChainRun" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.umbrella.blockchains.BlockChainRun" />
+      <module name="Blockchains-Project.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.umbrella.blockchains.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Example" type="Java Scratch" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Example" />
       <option name="SCRATCH_FILE_URL" value="file://$APPLICATION_CONFIG_DIR$/scratches/Example.java" />
@@ -55,6 +73,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.BlockChainRun" />
         <item itemvalue="Java Scratch.Example" />
       </list>
     </recent_temporary>
