@@ -3,7 +3,8 @@ package com.umbrella.blockchains.blockchain;
 import java.security.MessageDigest;
 
 public interface BlockChainUtil {
-    static String applySha256(String input){
+
+    static String applySha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             /* Applies sha256 to our input */
@@ -19,5 +20,9 @@ public interface BlockChainUtil {
         catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    static String createHashString(Block block) {
+        return block.getId() + block.getTimestamp() + block.getPrevHash();
     }
 }
