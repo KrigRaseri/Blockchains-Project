@@ -5,15 +5,15 @@ import lombok.Data;
 @Data
 public class Block {
     private int id;
-    private long timestamp;
+    private long timeStamp;
     private String prevHash;
     private String currHash;
 
-    public Block(int id, long timestamp, String prevHash, String currHash) {
+    public Block(int id, long timeStamp, String prevHash) {
         this.id = id;
-        this.timestamp = timestamp;
+        this.timeStamp = timeStamp;
         this.prevHash = prevHash;
-        this.currHash = currHash;
+        this.currHash = BlockChainUtil.applySha256(prevHash + timeStamp + id);;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class Block {
                 %s
                 Hash of the block:
                 %s
-                """, id,timestamp,prevHash,currHash);
+                """, id,timeStamp,prevHash,currHash);
     }
 }
