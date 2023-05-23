@@ -1,16 +1,15 @@
 package com.umbrella.blockchains.blockchain;
 
 import lombok.Data;
-import java.util.Date;
 
 @Data
 public class Block {
     private int id;
-    private Date timestamp;
-    private byte prevHash;
-    private byte currHash;
+    private long timestamp;
+    private String prevHash;
+    private String currHash;
 
-    public Block(int id, Date timestamp, byte prevHash, byte currHash) {
+    public Block(int id, long timestamp, String prevHash, String currHash) {
         this.id = id;
         this.timestamp = timestamp;
         this.prevHash = prevHash;
@@ -23,9 +22,9 @@ public class Block {
                 Block:
                 Id: %d
                 Timestamp: %s
-                Hash of the previous block:\u0020
+                Hash of the previous block:
                 %s
-                Hash of the block:\u0020
+                Hash of the block:
                 %s
                 """, id,timestamp,prevHash,currHash);
     }
