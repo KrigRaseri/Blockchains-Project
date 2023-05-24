@@ -8,13 +8,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BlockChain {
 
-    public List<Block> createBlockChain() {
+    public static List<Block> createBlockChain() {
         try (Scanner sc = new Scanner(System.in)) {
             List<Block> blockChain = new ArrayList<>();
-            Block block = new Block(null);
             System.out.println("Enter how many zeros the hash must start with:");
             String input = "0".repeat(sc.nextInt());
 
+            Block block = new Block(null);
             for (int i = 0; i < 5; i++) {
                 blockChain.add(generateProvedBlock(block, input));
                 block = new Block(block);
@@ -23,11 +23,11 @@ public class BlockChain {
         }
     }
 
-    public Block generateProvedBlock(Block block, String numOfZeros) {
+    private static Block generateProvedBlock(Block block, String numOfZeros) {
         long start = System.currentTimeMillis();
         while (!block.getCurrHash().startsWith(numOfZeros)) {
             block.setMagicNumber(ThreadLocalRandom.current().nextInt(100, 9999998 + 1));
-            block.setCurrHash(BlockChainUtil.applySha256(BlockChainUtil.createHashString(block)));
+            block.setCurrHash(BlockChainUtil.applySha256( BlockChainUtil.createHashString(block) ));
         }
         long end = System.currentTimeMillis();
         block.setTimeTaken((int) ((end-start) / 1000.0));
