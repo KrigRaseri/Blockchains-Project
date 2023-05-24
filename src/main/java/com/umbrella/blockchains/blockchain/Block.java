@@ -11,13 +11,14 @@ public class Block {
     private int magicNumber;
     private String prevHash;
     private String currHash;
+    private int timeTaken;
 
     public Block(Block previousBlock) {
         this.id = previousBlock == null ? 1 : previousBlock.getId() + 1;
         this.timeStamp = new Date().getTime();
         this.magicNumber = 0;
         this.prevHash = previousBlock == null ? "0" : previousBlock.getCurrHash();
-        this.currHash = BlockChainUtil.applySha256(prevHash + timeStamp + id);;
+        this.currHash = BlockChainUtil.applySha256(prevHash + timeStamp + id);
     }
 
     @Override
@@ -31,6 +32,7 @@ public class Block {
                 %s
                 Hash of the block:
                 %s
-                """, id,timeStamp, magicNumber, prevHash,currHash);
+                Block was generating for %d seconds
+                """, id,timeStamp, magicNumber, prevHash,currHash, timeTaken);
     }
 }
