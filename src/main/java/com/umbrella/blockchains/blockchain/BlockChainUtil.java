@@ -23,6 +23,9 @@ public interface BlockChainUtil {
     }
 
     static String createHashString(Block block) {
-        return block.getId() + block.getTimeStamp() + block.getPrevHash();
+        return block.getId()
+                + block.getTimeStamp()
+                + block.getMagicNumber()
+                + block.getPrevHash();
     }
 }
