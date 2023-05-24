@@ -16,6 +16,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.22")
     testCompileOnly("org.projectlombok:lombok:1.18.22")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
+    implementation("com.esotericsoftware:kryo:5.5.0")
 }
 
 tasks.getByName<Test>("test") {
