@@ -1,10 +1,12 @@
 package com.umbrella.blockchains.blockchain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class Block {
     private int id;
     private long timeStamp;
