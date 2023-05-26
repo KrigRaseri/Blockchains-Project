@@ -8,9 +8,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BlockChain {
 
-    public static List<Block> createBlockChain() {
+    public static ArrayList<Block> createBlockChain() {
         try (Scanner sc = new Scanner(System.in)) {
-            List<Block> blockChain = new ArrayList<>();
+            ArrayList<Block> blockChain = new ArrayList<>();
             System.out.println("Enter how many zeros the hash must start with:");
             String input = "0".repeat(sc.nextInt());
 
@@ -19,7 +19,7 @@ public class BlockChain {
                 blockChain.add(generateProvedBlock(block, input));
                 block = new Block(block);
             }
-            return Collections.unmodifiableList(blockChain);
+            return blockChain;
         }
     }
 
