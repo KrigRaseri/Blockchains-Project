@@ -10,9 +10,12 @@ import java.util.ArrayList;
 
 public class KryoImpl {
     private static File file = new File("src/main/resources/data.bin");
+    private static Kryo kryoInstance;
+
+    private KryoImpl() {}
 
     public static Kryo runKryo() {
-        Kryo kryo = new Kryo();
+        Kryo kryo = kryoInstance == null ? new Kryo() : kryoInstance;
         kryo.register(Block.class);
         kryo.register(ArrayList.class);
         return kryo;
