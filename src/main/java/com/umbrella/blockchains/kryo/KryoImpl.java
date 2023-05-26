@@ -4,7 +4,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.umbrella.blockchains.blockchain.Block;
-import com.umbrella.blockchains.blockchain.BlockChain;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class KryoImpl {
     public static Kryo runKryo() {
         Kryo kryo = new Kryo();
         kryo.register(Block.class);
-        kryo.register(BlockChain.class);
         kryo.register(ArrayList.class);
         return kryo;
     }
