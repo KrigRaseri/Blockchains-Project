@@ -15,10 +15,10 @@ public class BlockChain {
             String input = "0".repeat(sc.nextInt());
 
             Block block = new Block(null);
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 block = executorService.invokeAny( BlockChainUtil.createCallableList(block, input));
                 blockChain.add(block);
-                input = BlockChainUtil.adjustNumOfZeros(input.length(), block.getTimeTaken());
+                input = BlockChainUtil.adjustNumOfZeros(block, input.length(), block.getTimeTaken());
                 block = new Block(block);
             }
             executorService.shutdownNow();
@@ -39,6 +39,7 @@ public class BlockChain {
         }
         long end = System.currentTimeMillis();
         blockCopy.setTimeTaken((int) ((end-start) / 1000.0));
+        blockCopy.setMinerNum(Thread.currentThread().getId());
         return blockCopy;
     }
 }
