@@ -11,7 +11,7 @@ import static com.umbrella.blockchains.blockchain.BlockChainUtil.generateHash;
 
 
 public class BlockChain {
-    protected static ExecutorService executorService = Executors.newFixedThreadPool(10);
+    protected static ExecutorService executorService = Executors.newFixedThreadPool(20);
 
     public static ArrayList<Block> createBlockChain() {
         try (Scanner sc = new Scanner(System.in)) {
