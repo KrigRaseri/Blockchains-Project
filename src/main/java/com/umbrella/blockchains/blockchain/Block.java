@@ -8,12 +8,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class Block {
+    private long minerNum;
     private int id;
     private long timeStamp;
     private int magicNumber;
     private String prevHash;
     private String currHash;
     private int timeTaken;
+    private String numOfZerosChange;
 
     public Block(Block previousBlock) {
         this.id = previousBlock == null ? 1 : previousBlock.getId() + 1;
@@ -27,6 +29,7 @@ public class Block {
     public String toString() {
         return  String.format("""
                 Block:
+                Created by miner # %d
                 Id: %d
                 Timestamp: %s
                 Magic number: %s
@@ -35,6 +38,7 @@ public class Block {
                 Hash of the block:
                 %s
                 Block was generating for %d seconds
-                """, id,timeStamp, magicNumber, prevHash,currHash, timeTaken);
+                %s
+                """, minerNum, id,timeStamp, magicNumber, prevHash,currHash, timeTaken, numOfZerosChange);
     }
 }
