@@ -32,12 +32,19 @@ public interface BlockChainUtil {
                 + block.getPrevHash();
     }
 
-    static String adjustNumOfZeros(int numOfZeros, int timeTaken) {
+    static String adjustNumOfZeros(Block block, int numOfZeros, int timeTaken) {
+        String numZeros;
         if (timeTaken <= 10) {
-            return "0".repeat(numOfZeros + 1);
+            numZeros = "0".repeat(numOfZeros + 1);
+            block.setNumOfZerosChange(String.format("N was increased to %d", numZeros.length()));
+            return numZeros;
+
         } else if (timeTaken >= 60) {
-            return "0".repeat(numOfZeros - 1);
+            numZeros = "0".repeat(numOfZeros - 1);
+            block.setNumOfZerosChange(String.format("N was decreased by %d", numZeros.length()));
+            return numZeros;
         }
+        block.setNumOfZerosChange("N stays the same");
         return "0".repeat(numOfZeros);
     }
 
