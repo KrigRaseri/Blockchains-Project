@@ -7,12 +7,21 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.umbrella.blockchains.blockchain.BlockChainUtil.adjustNumOfZeros;
 import static com.umbrella.blockchains.blockchain.BlockChainUtil.generateHash;
 
-
+/**
+ * A simple implementation of a blockchain.
+ */
 public class BlockChain {
-    protected static ExecutorService executorService = Executors.newFixedThreadPool(20);
+    private static final int THREAD_POOL_SIZE = 20;
+    private static final  ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
+    /**
+     * Creates a blockchain by generating blocks with the desired number of leading zeros in their hash.
+     *
+     * @return The created blockchain as an ArrayList of blocks.
+     */
     public static ArrayList<Block> createBlockChain() {
         try (Scanner sc = new Scanner(System.in)) {
             ArrayList<Block> blockChain = new ArrayList<>();
@@ -23,7 +32,7 @@ public class BlockChain {
             for (int i = 0; i < 5; i++) {
                 block = executorService.invokeAny( createCallableList(block, input));
                 blockChain.add(block);
-                input = BlockChainUtil.adjustNumOfZeros(block, input.length(), block.getTimeTaken());
+                input = adjustNumOfZeros(block, input.length(), block.getTimeTaken());
                 block = new Block(block);
             }
             executorService.shutdownNow();
@@ -34,6 +43,14 @@ public class BlockChain {
         }
     }
 
+    /**
+     * Generates a proved block by finding a hash with the desired number of leading zeros.
+     *
+     * @param block      The previous block in the blockchain.
+     * @param numOfZeros The desired number of leading zeros.
+     * @return The proved block.
+     * @throws InterruptedException If the thread is interrupted.
+     */
     private static Block generateProvedBlock(Block block, String numOfZeros) throws InterruptedException {
         Block blockCopy = BlockChainUtil.copyBlock(block);
 
@@ -52,12 +69,26 @@ public class BlockChain {
         return blockCopy;
     }
 
+    /**
+     * Creates a list of Callable objects to generate proved blocks.
+     *
+     * @param block      The previous block in the blockchain.
+     * @param numOfZeros The desired number of leading zeros.
+     * @return The list of Callable objects.
+     */
     private static List<Callable<Block>> createCallableList(Block block, String numOfZeros) {
         return IntStream.range(0, 20)
                 .mapToObj(j -> newCallable(block, numOfZeros))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a new Callable object for generating proved blocks.
+     *
+     * @param block      The previous block in the blockchain.
+     * @param numOfZeros The desired number of leading zeros.
+     * @return The Callable object.
+     */
     private static Callable<Block> newCallable(Block block, String numOfZeros) {
         return new Callable<Block>() {
             @Override
