@@ -48,19 +48,8 @@ public interface BlockChainUtil {
         return "0".repeat(numOfZeros);
     }
 
-    static List<Callable<Block>> createCallableList(Block block, String numOfZeros) {
-        return IntStream.range(0, 20)
-                .mapToObj(j -> newCallable(block, numOfZeros))
-                .collect(Collectors.toList());
-    }
-
-    private static Callable<Block> newCallable(Block block, String numOfZeros) {
-        return new Callable<Block>() {
-            @Override
-            public Block call() throws Exception {
-                return BlockChain.generateProvedBlock(block, numOfZeros);
-            }
-        };
+    static String generateHash(Block block) {
+        return applySha256( BlockChainUtil.createHashString(block));
     }
 
     static Block copyBlock(Block block) {
