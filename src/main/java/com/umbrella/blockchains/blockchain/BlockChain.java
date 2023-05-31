@@ -7,8 +7,7 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.umbrella.blockchains.blockchain.BlockChainUtil.adjustNumOfZeros;
-import static com.umbrella.blockchains.blockchain.BlockChainUtil.generateHash;
+import static com.umbrella.blockchains.blockchain.BlockChainUtil.*;
 
 /**
  * A simple implementation of a blockchain.
@@ -20,11 +19,11 @@ public class BlockChain {
     /**
      * Creates a blockchain by generating blocks with the desired number of leading zeros in their hash.
      *
-     * @return The created blockchain as an ArrayList of blocks.
+     * @return The created blockchain as a List of blocks.
      */
-    public static ArrayList<Block> createBlockChain() {
+    public static List<Block> createBlockChain() {
         try (Scanner sc = new Scanner(System.in)) {
-            ArrayList<Block> blockChain = new ArrayList<>();
+            List<Block> blockChain = new ArrayList<>();
             System.out.println("Enter how many zeros the hash must start with:");
             String input = "0".repeat(sc.nextInt());
 
@@ -58,7 +57,7 @@ public class BlockChain {
         while (!blockCopy.getCurrHash().startsWith(numOfZeros)) {
             int randomMagicNum = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
             blockCopy.setMagicNumber(randomMagicNum);
-            blockCopy.setCurrHash( generateHash(blockCopy));
+            blockCopy.setCurrHash( createNewHash(blockCopy));
             if (Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
             }
