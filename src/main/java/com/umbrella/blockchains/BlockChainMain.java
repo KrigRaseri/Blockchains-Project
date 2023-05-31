@@ -5,7 +5,6 @@ import com.umbrella.blockchains.blockchain.Block;
 import com.umbrella.blockchains.blockchain.BlockChain;
 import com.umbrella.blockchains.kryo.KryoImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
