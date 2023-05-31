@@ -2,7 +2,6 @@ package com.umbrella.blockchains.blockchain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -22,16 +21,15 @@ public class BlockChain {
      * @return The created blockchain as a List of blocks.
      */
     public static List<Block> createBlockChain() {
-        try (Scanner sc = new Scanner(System.in)) {
+        try {
             List<Block> blockChain = new ArrayList<>();
-            System.out.println("Enter how many zeros the hash must start with:");
-            String input = "0".repeat(sc.nextInt());
+            String numOfZeros = "0";
 
             Block block = new Block(null);
             for (int i = 0; i < 5; i++) {
-                block = executorService.invokeAny( createCallableList(block, input));
+                block = executorService.invokeAny( createCallableList(block, numOfZeros));
                 blockChain.add(block);
-                input = adjustNumOfZeros(block, input.length(), block.getTimeTaken());
+                numOfZeros = adjustNumOfZeros(block, numOfZeros.length(), block.getTimeTaken());
                 block = new Block(block);
             }
             executorService.shutdownNow();
