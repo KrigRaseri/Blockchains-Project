@@ -1,12 +1,16 @@
 package com.umbrella.blockchains.blockchain;
 
 import java.security.MessageDigest;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 public interface BlockChainUtil {
+
+    /**
+     * Applies the SHA-256 hashing algorithm to the given input string.
+     *
+     * @param input The input string to hash.
+     * @return The hashed output as a hexadecimal string.
+     */
     static String applySha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -25,13 +29,27 @@ public interface BlockChainUtil {
         }
     }
 
-    static String createHashString(Block block) {
+    /**
+     * Creates a hash string for a given block by concatenating its attributes.
+     *
+     * @param block The block to create the hash string for.
+     * @return The hash string.
+     */
+    private static String createHashString(Block block) {
         return block.getId()
                 + block.getTimeStamp()
                 + block.getMagicNumber()
                 + block.getPrevHash();
     }
 
+    /**
+     * Adjusts the number of leading zeros based on the time taken to mine the block.
+     *
+     * @param block      The block to adjust.
+     * @param numOfZeros The current number of leading zeros.
+     * @param timeTaken  The time taken to mine the block.
+     * @return The adjusted number of leading zeros.
+     */
     static String adjustNumOfZeros(Block block, int numOfZeros, int timeTaken) {
         String numZeros;
         if (timeTaken <= 10) {
@@ -48,10 +66,22 @@ public interface BlockChainUtil {
         return "0".repeat(numOfZeros);
     }
 
-    static String generateHash(Block block) {
+    /**
+     * Takes an existing block and creates and returns a new hash string.
+     *
+     * @param block The block to create the hash string for.
+     * @return The new hash string.
+     */
+    static String createNewHash(Block block) {
         return applySha256( BlockChainUtil.createHashString(block));
     }
 
+    /**
+     * Creates a copy of a given block.
+     *
+     * @param block The block to copy.
+     * @return The copied block.
+     */
     static Block copyBlock(Block block) {
         Block blockCopy = new Block();
         blockCopy.setCurrHash(block.getCurrHash());
