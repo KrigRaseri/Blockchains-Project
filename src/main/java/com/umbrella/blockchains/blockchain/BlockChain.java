@@ -1,6 +1,7 @@
 package com.umbrella.blockchains.blockchain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -33,12 +34,6 @@ public class BlockChain {
             Block block = new Block(null);
             for (int i = 0; i < 5; i++) {
                 block = executorService.invokeAny( createCallableList(block, numOfZeros));
-                if (executorService instanceof ThreadPoolExecutor) {
-                    System.out.println(
-                            "Pool size is now " +
-                                    ((ThreadPoolExecutor) executorService).getActiveCount()
-                    );
-                }
                 blockChain.add(block);
                 numOfZeros = adjustNumOfZeros(block, numOfZeros.length(), block.getTimeTaken());
                 block = new Block(block);
@@ -102,6 +97,20 @@ public class BlockChain {
             @Override
             public Block call() throws Exception {
                 return BlockChain.generateProvedBlock(block, numOfZeros);
+            }
+        };
+    }
+
+    private static Runnable newRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                List<String> randomWords = new ArrayList<>(Arrays.asList("Tom: Hey, I'm first!",
+                        "Sarah: It's not fair!", "Sarah: You always will be first because it is your blockchain!",
+                        "Sarah: Anyway, thank you for this amazing chat.", "Tom: You're welcome :)",
+                        "Nick: Hey Tom, nice chat"));
+
+                IntStream.range(1, ThreadLocalRandom.current().nextInt(4)).
             }
         };
     }
