@@ -7,13 +7,18 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.umbrella.blockchains.blockchain.BlockChainUtil.*;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * A simple implementation of a blockchain.
  */
 public class BlockChain {
-    private static final int THREAD_POOL_SIZE = 20;
-    private static final  ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    private static final ArrayBlockingQueue<Runnable> boundedQueue = new ArrayBlockingQueue<>(1000);
+    private static final  ExecutorService executorService = new ThreadPoolExecutor(10, 20,
+            30, SECONDS,
+            boundedQueue,
+            new ThreadPoolExecutor.AbortPolicy());
+
 
     /**
      * Creates a blockchain by generating blocks with the desired number of leading zeros in their hash.
@@ -28,6 +33,12 @@ public class BlockChain {
             Block block = new Block(null);
             for (int i = 0; i < 5; i++) {
                 block = executorService.invokeAny( createCallableList(block, numOfZeros));
+                if (executorService instanceof ThreadPoolExecutor) {
+                    System.out.println(
+                            "Pool size is now " +
+                                    ((ThreadPoolExecutor) executorService).getActiveCount()
+                    );
+                }
                 blockChain.add(block);
                 numOfZeros = adjustNumOfZeros(block, numOfZeros.length(), block.getTimeTaken());
                 block = new Block(block);
