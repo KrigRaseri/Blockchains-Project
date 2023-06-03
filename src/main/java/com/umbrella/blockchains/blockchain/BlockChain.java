@@ -2,8 +2,10 @@ package com.umbrella.blockchains.blockchain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,15 +35,27 @@ public class BlockChain {
 
             Block block = new Block(null);
             for (int i = 0; i < 5; i++) {
+                AtomicBoolean stopMessageCollection = new AtomicBoolean(false);
+                Future<List<String>> messageCollectionFuture = startMessageCollectionTask(stopMessageCollection);
                 block = executorService.invokeAny( createCallableList(block, numOfZeros));
+
+                stopMessageCollection.set(true);
+                List<String> chatLogs = messageCollectionFuture.get();
+                block.setChatLogs(chatLogs);
+
+                if(i == 0) {
+                    block.setChatLogs(Collections.emptyList());
+                }
+
                 blockChain.add(block);
                 numOfZeros = adjustNumOfZeros(block, numOfZeros.length(), block.getTimeTaken());
                 block = new Block(block);
             }
+
             executorService.shutdownNow();
             return blockChain;
 
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -62,11 +76,13 @@ public class BlockChain {
             int randomMagicNum = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
             blockCopy.setMagicNumber(randomMagicNum);
             blockCopy.setCurrHash( createNewHash(blockCopy));
+
             if (Thread.currentThread().isInterrupted()) {
                 throw new InterruptedException();
             }
         }
         long end = System.currentTimeMillis();
+
         blockCopy.setTimeTaken((int) ((end-start) / 1000.0));
         blockCopy.setMinerNum(Thread.currentThread().getId());
         return blockCopy;
@@ -93,25 +109,26 @@ public class BlockChain {
      * @return The Callable object.
      */
     private static Callable<Block> newCallable(Block block, String numOfZeros) {
-        return new Callable<Block>() {
-            @Override
-            public Block call() throws Exception {
-                return BlockChain.generateProvedBlock(block, numOfZeros);
-            }
-        };
+        return () -> BlockChain.generateProvedBlock(block, numOfZeros);
     }
 
-    private static Runnable newRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                List<String> randomWords = new ArrayList<>(Arrays.asList("Tom: Hey, I'm first!",
-                        "Sarah: It's not fair!", "Sarah: You always will be first because it is your blockchain!",
-                        "Sarah: Anyway, thank you for this amazing chat.", "Tom: You're welcome :)",
-                        "Nick: Hey Tom, nice chat"));
-
-                IntStream.range(1, ThreadLocalRandom.current().nextInt(4)).
+    private static Future<List<String>> startMessageCollectionTask(AtomicBoolean stopFlag) {
+        return BlockChain.executorService.submit(() -> {
+            List<String> recordedMessages = new ArrayList<>();
+            while (!stopFlag.get()) {
+                recordedMessages.add(getRandomMessage());
+                Thread.sleep(100);
             }
-        };
+            return recordedMessages;
+        });
+    }
+
+    private static String getRandomMessage() {
+        List<String> randomWords = new ArrayList<>(Arrays.asList("Tom: Hey, I'm first!",
+                "Sarah: It's not fair!", "Sarah: You always will be first because it is your blockchain!",
+                "Sarah: Anyway, thank you for this amazing chat.", "Tom: You're welcome :)",
+                "Nick: Hey Tom, nice chat"));
+
+        return randomWords.get(ThreadLocalRandom.current().nextInt(randomWords.size()));
     }
 }
