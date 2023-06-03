@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,7 @@ public class Block {
     private int magicNumber;
     private String prevHash;
     private String currHash;
+    private List<String> chatLogs;
     private int timeTaken;
     private String numOfZerosChange;
 
@@ -37,8 +39,26 @@ public class Block {
                 %s
                 Hash of the block:
                 %s
+                Block data: %s
                 Block was generating for %d seconds
                 %s
-                """, minerNum, id,timeStamp, magicNumber, prevHash,currHash, timeTaken, numOfZerosChange);
+                """, minerNum, id,timeStamp, magicNumber, prevHash, currHash
+                ,chatBlock(chatLogs), timeTaken, numOfZerosChange);
+    }
+
+
+    private static String chatBlock(List<String> li) {
+        StringBuilder chatLogs = new StringBuilder();
+
+        if (li.isEmpty()) {
+            chatLogs = new StringBuilder("no messages");
+            return chatLogs.toString();
+        }
+
+        for (int i = 0; i < li.size(); i++) {
+            chatLogs.append("\n" + li.get(i));
+
+        }
+        return chatLogs.toString();
     }
 }
