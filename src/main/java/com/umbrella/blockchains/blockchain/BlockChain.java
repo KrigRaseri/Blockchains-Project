@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.umbrella.blockchains.blockchain.BlockChainUtil.*;
-
-
 /*
  * The BlockChain class represents a blockchain and provides methods to create a blockchain
  * by generating blocks with the desired number of leading zeros in their hash.
@@ -43,7 +40,7 @@ public class BlockChain {
             }
 
             blockChain.add(block);
-            leadingZeros = adjustNumOfZeros(block, leadingZeros.length(), block.getTimeTaken());
+            leadingZeros = BlockChainUtil.adjustNumOfZeros(block, leadingZeros.length(), block.getTimeTaken());
             block = new Block(block);
         }
 
