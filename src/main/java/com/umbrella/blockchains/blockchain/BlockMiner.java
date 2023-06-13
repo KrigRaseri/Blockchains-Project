@@ -22,7 +22,6 @@ public class BlockMiner {
             blockCopy.setCurrHash(BlockChainUtil.createNewHash(blockCopy));
 
             if (Thread.currentThread().isInterrupted()) {
-                System.out.println("Block mining was interrupted.");
                 throw new InterruptedException();
             }
         }
