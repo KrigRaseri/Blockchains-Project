@@ -1,26 +1,28 @@
 package com.umbrella.blockchains.blockchain;
 
+import com.google.inject.Inject;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.umbrella.blockchains.blockchain.BlockChainUtil.*;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
-/**
- * A simple implementation of a blockchain.
+
+/*
+ * The BlockChain class represents a blockchain and provides methods to create a blockchain
+ * by generating blocks with the desired number of leading zeros in their hash.
  */
+
+@AllArgsConstructor(onConstructor = @__({@Inject}))
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BlockChain {
-    private static final ArrayBlockingQueue<Runnable> boundedQueue = new ArrayBlockingQueue<>(1000);
-    private static final  ExecutorService executorService = new ThreadPoolExecutor(10, 20,
-            30, SECONDS,
-            boundedQueue,
-            new ThreadPoolExecutor.AbortPolicy());
+    private BlockChainExecutor blockChainExecutor;
 
 
     /**
@@ -28,107 +30,47 @@ public class BlockChain {
      *
      * @return The created blockchain as a List of blocks.
      */
-    public static List<Block> createBlockChain() {
-        try {
-            List<Block> blockChain = new ArrayList<>();
-            String numOfZeros = "0";
+    public List<Block> createBlockChain() {
+        List<Block> blockChain = new ArrayList<>();
+        String leadingZeros = "0";
 
-            Block block = new Block(null);
-            for (int i = 0; i < 5; i++) {
-                AtomicBoolean stopMessageCollection = new AtomicBoolean(false);
-                Future<List<String>> messageCollectionFuture = startMessageCollectionTask(stopMessageCollection);
-                block = executorService.invokeAny( createCallableList(block, numOfZeros));
+        Block block = new Block(null);
+        for (int i = 0; i < 5; i++) {
+            block = createBlock(block, leadingZeros);
 
-                stopMessageCollection.set(true);
-                List<String> chatLogs = messageCollectionFuture.get();
-                block.setChatLogs(chatLogs);
-
-                if(i == 0) {
-                    block.setChatLogs(Collections.emptyList());
-                }
-
-                blockChain.add(block);
-                numOfZeros = adjustNumOfZeros(block, numOfZeros.length(), block.getTimeTaken());
-                block = new Block(block);
+            if (i == 0) {
+                block.setChatLogs(Collections.emptyList());
             }
 
-            executorService.shutdownNow();
-            return blockChain;
+            blockChain.add(block);
+            leadingZeros = adjustNumOfZeros(block, leadingZeros.length(), block.getTimeTaken());
+            block = new Block(block);
+        }
 
-        } catch (Exception e) {
+        blockChainExecutor.executorService.shutdownNow();
+        return blockChain;
+    }
+
+    /**
+     * Creates a block by mining a proved block and collecting chat logs concurrently.
+     *
+     * @param previousBlock The previous block in the blockchain.
+     * @param leadingZeros  The desired number of leading zeros.
+     * @return The created block.
+     */
+    private Block createBlock(Block previousBlock, String leadingZeros) {
+        try {
+            AtomicBoolean stopMessageCollection = new AtomicBoolean(false);
+            Future<List<String>> messageCollectionFuture = blockChainExecutor.startMessageCollectionTask(stopMessageCollection);
+            Block block = blockChainExecutor.executorService
+                    .invokeAny(blockChainExecutor.createCallableList(previousBlock, leadingZeros));
+
+            stopMessageCollection.set(true);
+            block.setChatLogs(messageCollectionFuture.get());
+            return block;
+
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Generates a proved block by finding a hash with the desired number of leading zeros.
-     *
-     * @param block      The previous block in the blockchain.
-     * @param numOfZeros The desired number of leading zeros.
-     * @return The proved block.
-     * @throws InterruptedException If the thread is interrupted.
-     */
-    private static Block generateProvedBlock(Block block, String numOfZeros) throws InterruptedException {
-        Block blockCopy = BlockChainUtil.copyBlock(block);
-
-        long start = System.currentTimeMillis();
-        while (!blockCopy.getCurrHash().startsWith(numOfZeros)) {
-            int randomMagicNum = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
-            blockCopy.setMagicNumber(randomMagicNum);
-            blockCopy.setCurrHash( createNewHash(blockCopy));
-
-            if (Thread.currentThread().isInterrupted()) {
-                throw new InterruptedException();
-            }
-        }
-        long end = System.currentTimeMillis();
-
-        blockCopy.setTimeTaken((int) ((end-start) / 1000.0));
-        blockCopy.setMinerNum(Thread.currentThread().getId());
-        return blockCopy;
-    }
-
-    /**
-     * Creates a list of Callable objects to generate proved blocks.
-     *
-     * @param block      The previous block in the blockchain.
-     * @param numOfZeros The desired number of leading zeros.
-     * @return The list of Callable objects.
-     */
-    private static List<Callable<Block>> createCallableList(Block block, String numOfZeros) {
-        return IntStream.range(0, 20)
-                .mapToObj(j -> newCallable(block, numOfZeros))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Creates a new Callable object for generating proved blocks.
-     *
-     * @param block      The previous block in the blockchain.
-     * @param numOfZeros The desired number of leading zeros.
-     * @return The Callable object.
-     */
-    private static Callable<Block> newCallable(Block block, String numOfZeros) {
-        return () -> BlockChain.generateProvedBlock(block, numOfZeros);
-    }
-
-    private static Future<List<String>> startMessageCollectionTask(AtomicBoolean stopFlag) {
-        return BlockChain.executorService.submit(() -> {
-            List<String> recordedMessages = new ArrayList<>();
-            while (!stopFlag.get()) {
-                recordedMessages.add(getRandomMessage());
-                Thread.sleep(100);
-            }
-            return recordedMessages;
-        });
-    }
-
-    private static String getRandomMessage() {
-        List<String> randomWords = new ArrayList<>(Arrays.asList("Tom: Hey, I'm first!",
-                "Sarah: It's not fair!", "Sarah: You always will be first because it is your blockchain!",
-                "Sarah: Anyway, thank you for this amazing chat.", "Tom: You're welcome :)",
-                "Nick: Hey Tom, nice chat"));
-
-        return randomWords.get(ThreadLocalRandom.current().nextInt(randomWords.size()));
     }
 }
