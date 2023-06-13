@@ -18,6 +18,7 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:1.18.22")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
     implementation("com.esotericsoftware:kryo:5.5.0")
+    implementation("com.google.inject:guice:7.0.0")
 }
 
 tasks.getByName<Test>("test") {
