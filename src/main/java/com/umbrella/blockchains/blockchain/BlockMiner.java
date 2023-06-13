@@ -2,8 +2,6 @@ package com.umbrella.blockchains.blockchain;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.umbrella.blockchains.blockchain.BlockChainUtil.createNewHash;
-
 public class BlockMiner {
 
     /**
@@ -21,7 +19,7 @@ public class BlockMiner {
         while (!blockCopy.getCurrHash().startsWith(leadingZeros)) {
             int randomMagicNum = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
             blockCopy.setMagicNumber(randomMagicNum);
-            blockCopy.setCurrHash(createNewHash(blockCopy));
+            blockCopy.setCurrHash(BlockChainUtil.createNewHash(blockCopy));
 
             if (Thread.currentThread().isInterrupted()) {
                 System.out.println("Block mining was interrupted.");
