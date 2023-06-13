@@ -30,11 +30,11 @@ public class BlockChainMain {
         blockChain.createBlockChain().stream().map(Block::toString).forEach(System.out::println);
 
         /*
-        List<Block> blockChain = BlockChain.createBlockChain();
-        blockChain.stream().map(Block::toString).forEach(System.out::println);
+        List<Block> blockChainList = blockChain.createBlockChain();
+        blockChainList.stream().map(Block::toString).forEach(System.out::println);
 
         Kryo kryo = KryoImpl.runKryo();
-        blockChain.forEach(b -> KryoImpl.writeKryo(kryo, blockChain));
+        blockChainList.forEach(b -> KryoImpl.writeKryo(kryo, blockChainList));
         KryoImpl.readKryo(kryo).forEach(System.out::println);
         */
     }
