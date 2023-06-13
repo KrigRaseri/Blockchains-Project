@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.umbrella.blockchains.blockchain.BlockChainUtil.getRandomMessage;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
@@ -60,7 +59,7 @@ public class BlockChainExecutor {
         return executorService.submit(() -> {
             List<String> recordedMessages = new ArrayList<>();
             while (!stopFlag.get()) {
-                recordedMessages.add(getRandomMessage());
+                recordedMessages.add( BlockChainUtil.getRandomMessage());
                 Thread.sleep(100);
             }
             return recordedMessages;
