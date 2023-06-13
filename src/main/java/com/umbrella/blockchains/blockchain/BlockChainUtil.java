@@ -42,7 +42,9 @@ public interface BlockChainUtil {
         return block.getId()
                 + block.getTimeStamp()
                 + block.getMagicNumber()
-                + block.getPrevHash();
+                + block.getPrevHash()
+                + block.getMinerNum()
+                + block.getChatLogs();
     }
 
     /**
