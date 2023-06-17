@@ -1,10 +1,6 @@
 package com.umbrella.blockchains.blockchain;
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public interface BlockChainUtil {
 
@@ -94,19 +90,5 @@ public interface BlockChainUtil {
         blockCopy.setPrevHash(block.getPrevHash());
         blockCopy.setTimeStamp(block.getTimeStamp());
         return blockCopy;
-    }
-
-    /**
-     * Generates a random chat message.
-     *
-     * @return The random chat message.
-     */
-    static String getRandomMessage() {
-        List<String> randomWords = new ArrayList<>(Arrays.asList("Tom: Hey, I'm first!",
-                "Sarah: It's not fair!", "Sarah: You always will be first because it is your blockchain!",
-                "Sarah: Anyway, thank you for this amazing chat.", "Tom: You're welcome :)",
-                "Nick: Hey Tom, nice chat"));
-
-        return randomWords.get(ThreadLocalRandom.current().nextInt(randomWords.size()));
     }
 }
