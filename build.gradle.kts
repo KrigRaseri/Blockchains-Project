@@ -19,6 +19,7 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
     implementation("com.esotericsoftware:kryo:5.5.0")
     implementation("com.google.inject:guice:7.0.0")
+    implementation("commons-codec:commons-codec:1.9")
 }
 
 tasks.getByName<Test>("test") {
