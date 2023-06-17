@@ -2,6 +2,9 @@ package com.umbrella.blockchains.blockchain;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Class to handle mining related tasks.
+ * */
 public class BlockMiner {
 
     /**
