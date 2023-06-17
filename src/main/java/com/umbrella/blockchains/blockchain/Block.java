@@ -46,7 +46,6 @@ public class Block {
                 ,chatBlock(chatLogs), timeTaken, numOfZerosChange);
     }
 
-
     private static String chatBlock(List<String> li) {
         StringBuilder chatLogs = new StringBuilder();
 
