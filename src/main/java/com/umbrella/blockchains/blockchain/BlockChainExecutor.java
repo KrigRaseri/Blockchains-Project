@@ -1,6 +1,10 @@
 package com.umbrella.blockchains.blockchain;
 
 import com.google.inject.Inject;
+import com.umbrella.blockchains.messenger.Message;
+import com.umbrella.blockchains.messenger.MessengerExceptions;
+import com.umbrella.blockchains.messenger.MessengerUtil;
+import com.umbrella.blockchains.messenger.Receiver;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -50,16 +54,27 @@ public class BlockChainExecutor {
     }
 
     /**
-     * Starts a task to collect messages concurrently until the stop flag is set.
+     * Starts a task to collect messages concurrently until the stop flag is set. Each message and pulled from a small
+     * random list of pre-made messages. The message is encrypted and signed with a signature made from a private key.
+     * Then the message is decrypted and validated based on the public key, if true it is added to the recorded messages
+     * list. Note: This is only for test and demo purposes.
      *
      * @param stopFlag The AtomicBoolean flag to stop the message collection.
      * @return The Future object representing the task's result.
      */
     protected Future<List<String>> startMessageCollectionTask(AtomicBoolean stopFlag) {
+        String publicKeyPath = "./src/main/resources/KeyPair/publicKey";
+        String privateKeyPath = "./src/main/resources/KeyPair/privateKey";
+        String signedDataPath = "./src/main/resources/MyData/SignedData.txt";
+        Receiver receiver = new Receiver();
+
         return executorService.submit(() -> {
             List<String> recordedMessages = new ArrayList<>();
             while (!stopFlag.get()) {
-                recordedMessages.add( BlockChainUtil.getRandomMessage());
+                Message message = new Message(MessengerUtil.getRandomMessage(), privateKeyPath);
+                message.writeToFile(signedDataPath);
+                String storedMessage = receiver.decryptMessage(signedDataPath, publicKeyPath);
+                recordedMessages.add(storedMessage);
                 Thread.sleep(100);
             }
             return recordedMessages;
