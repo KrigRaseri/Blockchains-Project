@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,11 +33,6 @@ public class BlockChain {
         Block block = new Block(null);
         for (int i = 0; i < 5; i++) {
             block = createBlock(block, leadingZeros);
-
-            if (i == 0) {
-                block.setChatLogs(Collections.emptyList());
-            }
-
             blockChain.add(block);
             leadingZeros = BlockChainUtil.adjustNumOfZeros(block, leadingZeros.length(), block.getTimeTaken());
             block = new Block(block);
@@ -66,8 +60,10 @@ public class BlockChain {
             block.setChatLogs(messageCollectionFuture.get());
             return block;
 
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error occurred during block creation: " + e.getMessage(), e.getCause());
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Block creation was interrupted.", e);
         }
     }
 }
